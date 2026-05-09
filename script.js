@@ -201,6 +201,10 @@ class VaultManager {
             this.navAdminLi.style.display = 'none';
             this.userRoleLabel.textContent = 'Secure Session';
         }
+        
+        this.searchBar.value = '';
+        setTimeout(() => { if(this.searchBar) this.searchBar.value = ''; }, 500);
+
         await this.fetchItems();
         lucide.createIcons();
     }
