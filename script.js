@@ -124,6 +124,15 @@ class VaultManager {
         this.closeResetModal.addEventListener('click', () => this.toggleResetModal(false));
         this.resetModal.addEventListener('click', e => { if (e.target === this.resetModal) this.toggleResetModal(false); });
         this.confirmResetBtn.addEventListener('click', () => this.confirmResetPassword());
+        this.adminUsersTbody.addEventListener('click', e => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const id = btn.dataset.id;
+            const username = btn.dataset.username;
+            if (btn.classList.contains('btn-reset-pw')) this.openResetModal(id, username);
+            if (btn.classList.contains('btn-toggle-admin')) this.toggleUserAdmin(id);
+            if (btn.classList.contains('btn-delete-user')) this.deleteUser(id, username);
+        });
     }
 
     // ── Mobile Drawer ─────────────────────────────
@@ -270,12 +279,25 @@ class VaultManager {
     async handleAddItem(e) {
         e.preventDefault();
         const type = this.itemTypeSelect.value;
+        const passwordInput = document.getElementById('password').value.trim();
+        const urlInput = document.getElementById('site-url').value.trim();
+
+        if (type === 'password' && !passwordInput) {
+            this.showToast('Please enter or generate a password.', 'error');
+            return;
+        }
+        
+        if (urlInput && !urlInput.startsWith('http://') && !urlInput.startsWith('https://')) {
+            this.showToast('URL must start with http:// or https://', 'error');
+            return;
+        }
+
         const saved = await this.api('/items', 'POST', {
-            type, site_name: document.getElementById('site-name').value,
-            url: document.getElementById('site-url').value,
-            username: document.getElementById('username').value || null,
-            password: document.getElementById('password').value || null,
-            description: document.getElementById('description').value || null
+            type, site_name: document.getElementById('site-name').value.trim(),
+            url: urlInput,
+            username: document.getElementById('username').value.trim() || null,
+            password: passwordInput || null,
+            description: document.getElementById('description').value.trim() || null
         });
         if (saved) { await this.fetchItems(); this.toggleModal(false); this.showToast('Saved to vault!'); }
     }
@@ -310,8 +332,8 @@ class VaultManager {
                         <div class="site-icon" style="background:rgba(59,130,246,0.1);color:var(--accent-secondary);"><i data-lucide="link" size="20"></i></div>
                         <div><div class="card-title">${this.esc(item.siteName)}</div><div class="card-subtitle">Quick Link</div></div>
                         <div style="margin-left:auto;display:flex;gap:.4rem;">
-                            <button class="icon-btn" onclick="vault.toggleFavorite(${item.id})" style="color:${fc};"><i data-lucide="star" fill="${ff}" size="17"></i></button>
-                            <button class="icon-btn danger" onclick="vault.deleteItem(${item.id})"><i data-lucide="trash-2" size="17"></i></button>
+                            <button class="icon-btn" onclick="vault.toggleFavorite(${item.id})" style="color:${fc};" aria-label="Toggle Favorite"><i data-lucide="star" fill="${ff}" size="17"></i></button>
+                            <button class="icon-btn danger" onclick="vault.deleteItem(${item.id})" aria-label="Delete Item"><i data-lucide="trash-2" size="17"></i></button>
                         </div>
                     </div>
                     <div class="field-group"><div class="field-label">Description</div>
@@ -324,18 +346,18 @@ class VaultManager {
                         <div class="site-icon">${item.siteName[0].toUpperCase()}</div>
                         <div><div class="card-title">${this.esc(item.siteName)}</div><div class="card-subtitle">${this.getDomain(item.url)}</div></div>
                         <div style="margin-left:auto;display:flex;gap:.4rem;">
-                            <button class="icon-btn" onclick="vault.toggleFavorite(${item.id})" style="color:${fc};"><i data-lucide="star" fill="${ff}" size="17"></i></button>
-                            <button class="icon-btn danger" onclick="vault.deleteItem(${item.id})"><i data-lucide="trash-2" size="17"></i></button>
+                            <button class="icon-btn" onclick="vault.toggleFavorite(${item.id})" style="color:${fc};" aria-label="Toggle Favorite"><i data-lucide="star" fill="${ff}" size="17"></i></button>
+                            <button class="icon-btn danger" onclick="vault.deleteItem(${item.id})" aria-label="Delete Item"><i data-lucide="trash-2" size="17"></i></button>
                         </div>
                     </div>
                     <div class="field-group"><div class="field-label">Username</div>
                         <div class="field-value"><span>${this.esc(item.username || '—')}</span>
-                        <button class="copy-btn" onclick="vault.copy('${this.ea(item.username||'')}')"><i data-lucide="copy" size="14"></i></button></div></div>
+                        <button class="copy-btn" onclick="vault.copy('${this.ea(item.username||'')}')" aria-label="Copy Username"><i data-lucide="copy" size="14"></i></button></div></div>
                     <div class="field-group"><div class="field-label">Password</div>
                         <div class="field-value"><span class="masked-pass">••••••••</span>
                         <div style="display:flex;gap:.4rem;">
-                            <button class="copy-btn" onclick="vault.togglePass(this,'${this.ea(item.password||'')}')"><i data-lucide="eye" size="14"></i></button>
-                            <button class="copy-btn" onclick="vault.copy('${this.ea(item.password||'')}')"><i data-lucide="copy" size="14"></i></button>
+                            <button class="copy-btn" onclick="vault.togglePass(this,'${this.ea(item.password||'')}')" aria-label="Show/Hide Password"><i data-lucide="eye" size="14"></i></button>
+                            <button class="copy-btn" onclick="vault.copy('${this.ea(item.password||'')}')" aria-label="Copy Password"><i data-lucide="copy" size="14"></i></button>
                         </div></div></div>
                 </div>`;
         }).join('');
@@ -404,7 +426,7 @@ class VaultManager {
             try {
                 const data = JSON.parse(ev.target.result);
                 if (data.items?.length && confirm(`Import ${data.items.length} items?`)) {
-                    for (const item of data.items) await this.api('/items', 'POST', { type:item.type, site_name:item.siteName||item.site_name, url:item.url, username:item.username, password:item.password, description:item.description });
+                    await Promise.all(data.items.map(item => this.api('/items', 'POST', { type:item.type, site_name:item.siteName||item.site_name, url:item.url, username:item.username, password:item.password, description:item.description })));
                     await this.fetchItems(); this.showToast('Imported successfully!');
                 }
             } catch { this.showToast('Invalid file.', 'error'); }
@@ -443,9 +465,9 @@ class VaultManager {
                 const joined = new Date(u.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
                 const role = u.is_admin ? '<span class="role-badge admin-badge-sm">Admin</span>' : '<span class="role-badge user-badge-sm">User</span>';
                 const actions = isMe ? '<span style="color:var(--text-dim);font-size:.75rem;">(You)</span>' : `
-                    <button class="tbl-btn" onclick="vault.openResetModal(${u.id},'${this.ea(u.username)}')" title="Reset Password"><i data-lucide="key" size="13"></i></button>
-                    <button class="tbl-btn" onclick="vault.toggleUserAdmin(${u.id})" title="Toggle Admin"><i data-lucide="${u.is_admin?'shield-off':'shield-check'}" size="13"></i></button>
-                    <button class="tbl-btn danger" onclick="vault.deleteUser(${u.id},'${this.ea(u.username)}')" title="Delete"><i data-lucide="trash-2" size="13"></i></button>`;
+                    <button class="tbl-btn btn-reset-pw" data-id="${u.id}" data-username="${this.esc(u.username)}" title="Reset Password"><i data-lucide="key" size="13"></i></button>
+                    <button class="tbl-btn btn-toggle-admin" data-id="${u.id}" title="Toggle Admin"><i data-lucide="${u.is_admin?'shield-off':'shield-check'}" size="13"></i></button>
+                    <button class="tbl-btn danger btn-delete-user" data-id="${u.id}" data-username="${this.esc(u.username)}" title="Delete"><i data-lucide="trash-2" size="13"></i></button>`;
                 return `<tr>
                     <td style="color:var(--text-dim);">#${u.id}</td>
                     <td><strong>${this.esc(u.username)}</strong></td>
