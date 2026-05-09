@@ -2,317 +2,379 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Aura Vault | Secure Password Manager</title>
-    <meta name="description" content="Aura Vault - a secure, cloud-synced password and link manager.">
+    <meta name="description" content="Aura Vault — a secure, cloud-synced password and link manager.">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div id="app">
-        <!-- Login Screen -->
-        <div id="login-screen" class="auth-container">
-            <div class="logo-container">
-                <i data-lucide="shield-check" class="logo-icon"></i>
-                <h1 id="auth-title">Welcome to Aura Vault</h1>
-                <p id="auth-subtitle" class="subtitle">Securely store your digital life</p>
+<div id="app">
+
+    <!-- ═══════════════════════════════════════ LOGIN SCREEN ═══ -->
+    <div id="login-screen" class="auth-container">
+        <div class="auth-logo">
+            <div class="auth-logo-icon">
+                <i data-lucide="shield-check"></i>
             </div>
-            <form id="login-form">
-                <div class="input-group">
-                    <label for="vault-user">Username</label>
+            <h1 id="auth-title">Welcome Back</h1>
+            <p id="auth-subtitle" class="subtitle">Enter your credentials to unlock the vault</p>
+        </div>
+        <form id="login-form">
+            <div class="input-group">
+                <label for="vault-user">Username</label>
+                <div class="input-wrap">
+                    <i data-lucide="user" class="input-icon"></i>
                     <input type="text" id="vault-user" placeholder="e.g. alex_secure" required autocomplete="username">
                 </div>
-                <div class="input-group">
-                    <label for="master-password">Master Password</label>
+            </div>
+            <div class="input-group">
+                <label for="master-password">Master Password</label>
+                <div class="input-wrap">
+                    <i data-lucide="lock" class="input-icon"></i>
                     <input type="password" id="master-password" placeholder="••••••••" required autocomplete="current-password">
                 </div>
-                <button type="submit" id="auth-submit-btn" class="btn btn-primary">
-                    Enter Vault <i data-lucide="unlock"></i>
-                </button>
-                <p style="margin-top:1.5rem;font-size:0.8rem;color:var(--text-dim);">
-                    <span id="auth-switch-text">New here?</span>
-                    <a href="#" id="auth-switch-link" style="color:var(--accent-primary);text-decoration:none;font-weight:600;">Create Account</a>
-                </p>
-            </form>
-        </div>
-
-        <!-- Main Vault Screen -->
-        <div id="vault-screen" class="vault-layout">
-            <aside class="sidebar">
-                <div class="logo-container" style="text-align:left;margin-bottom:3rem;">
-                    <h2 style="display:flex;align-items:center;gap:0.5rem;font-size:1.2rem;">
-                        <i data-lucide="shield-check" style="color:var(--accent-primary)"></i> Aura Vault
-                    </h2>
-                </div>
-
-                <nav style="flex:1;">
-                    <ul style="list-style:none;">
-                        <li style="margin-bottom:0.5rem;">
-                            <button id="nav-all" class="btn nav-btn active" style="justify-content:flex-start;">
-                                <i data-lucide="layout-grid"></i> All Items
-                            </button>
-                        </li>
-                        <li style="margin-bottom:0.5rem;">
-                            <button id="nav-passwords" class="btn nav-btn" style="justify-content:flex-start;color:var(--text-dim);">
-                                <i data-lucide="key-round"></i> Passwords
-                            </button>
-                        </li>
-                        <li style="margin-bottom:0.5rem;">
-                            <button id="nav-links" class="btn nav-btn" style="justify-content:flex-start;color:var(--text-dim);">
-                                <i data-lucide="link"></i> Links
-                            </button>
-                        </li>
-                        <li style="margin-bottom:0.5rem;">
-                            <button id="nav-favorites" class="btn nav-btn" style="justify-content:flex-start;color:var(--text-dim);">
-                                <i data-lucide="star"></i> Favorites
-                            </button>
-                        </li>
-                        <li style="margin-bottom:0.5rem;">
-                            <button id="nav-settings" class="btn nav-btn" style="justify-content:flex-start;color:var(--text-dim);">
-                                <i data-lucide="settings"></i> Settings
-                            </button>
-                        </li>
-                        <!-- Admin only -->
-                        <li id="nav-admin-li" style="margin-bottom:0.5rem;display:none;">
-                            <button id="nav-admin" class="btn nav-btn admin-nav-btn" style="justify-content:flex-start;">
-                                <i data-lucide="shield"></i> Admin Panel
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-
-                <div style="display:flex;align-items:center;gap:1rem;padding-top:1rem;border-top:1px solid var(--panel-border);">
-                    <div id="user-avatar" class="user-avatar">?</div>
-                    <div style="flex:1;">
-                        <p id="vault-username-display" style="font-size:0.8rem;font-weight:600;">Vault Owner</p>
-                        <p id="user-role-label" style="font-size:0.7rem;color:var(--text-dim);">Secure Session</p>
-                    </div>
-                    <button id="logout-btn" style="background:none;border:none;color:var(--text-dim);cursor:pointer;">
-                        <i data-lucide="log-out" size="18"></i>
-                    </button>
-                </div>
-            </aside>
-
-            <main class="main-content">
-                <!-- Vault Grid View -->
-                <div id="vault-grid-container">
-                    <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
-                        <div>
-                            <h1 id="view-title" style="font-size:2rem;">All Items</h1>
-                            <p id="item-count" style="color:var(--text-dim);font-size:0.9rem;">0 items found</p>
-                        </div>
-                        <div class="search-container" style="width:300px;margin-bottom:0;">
-                            <i data-lucide="search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-dim);width:18px;"></i>
-                            <input type="text" id="search-bar" class="search-input" placeholder="Search your vault...">
-                        </div>
-                    </header>
-                    <div id="vault-grid" class="vault-grid"></div>
-                </div>
-
-                <!-- Settings Panel -->
-                <div id="settings-panel" class="hidden">
-                    <h1 style="font-size:2rem;margin-bottom:2rem;">Settings</h1>
-                    <div class="vault-grid">
-                        <div class="vault-card">
-                            <h3 style="margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;">
-                                <i data-lucide="user-cog" size="18"></i> Security
-                            </h3>
-                            <form id="change-pass-form">
-                                <div class="input-group">
-                                    <label>New Master Password</label>
-                                    <input type="password" id="new-master-pass" placeholder="Enter new password" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary" style="padding:0.6rem;">Update Password</button>
-                            </form>
-                        </div>
-                        <div class="vault-card">
-                            <h3 style="margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;">
-                                <i data-lucide="database" size="18"></i> Data Management
-                            </h3>
-                            <div style="display:flex;flex-direction:column;gap:1rem;">
-                                <button id="export-btn" class="btn" style="background:rgba(16,185,129,0.1);color:var(--success);justify-content:flex-start;">
-                                    <i data-lucide="download"></i> Export Vault (.json)
-                                </button>
-                                <div style="position:relative;">
-                                    <input type="file" id="import-file" class="hidden" accept=".json">
-                                    <button id="import-btn" class="btn" style="background:rgba(59,130,246,0.1);color:var(--accent-secondary);justify-content:flex-start;">
-                                        <i data-lucide="upload"></i> Import Vault
-                                    </button>
-                                </div>
-                                <button id="wipe-btn" class="btn" style="background:rgba(239,68,68,0.1);color:var(--danger);justify-content:flex-start;">
-                                    <i data-lucide="trash-2"></i> Wipe Entire Vault
-                                </button>
-                            </div>
-                        </div>
-                        <div class="vault-card">
-                            <h3 style="margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;">
-                                <i data-lucide="bar-chart-3" size="18"></i> Vault Statistics
-                            </h3>
-                            <div style="display:flex;flex-direction:column;gap:1rem;">
-                                <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
-                                    <span style="color:var(--text-dim);">Total Passwords:</span>
-                                    <span id="stat-passwords" style="font-weight:600;">0</span>
-                                </div>
-                                <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
-                                    <span style="color:var(--text-dim);">Total Links:</span>
-                                    <span id="stat-links" style="font-weight:600;">0</span>
-                                </div>
-                                <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
-                                    <span style="color:var(--text-dim);">Security Level:</span>
-                                    <span style="color:var(--success);font-weight:600;">Excellent</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Panel -->
-                <div id="admin-panel" class="hidden">
-                    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;">
-                        <div>
-                            <h1 style="font-size:2rem;">Admin Panel</h1>
-                            <p style="color:var(--text-dim);font-size:0.9rem;">Manage all users and view global statistics</p>
-                        </div>
-                        <span class="admin-badge">ADMIN</span>
-                    </div>
-
-                    <!-- Global Stats -->
-                    <div class="admin-stats-grid" id="admin-stats-grid">
-                        <div class="stat-card">
-                            <i data-lucide="users" class="stat-icon"></i>
-                            <div class="stat-value" id="admin-stat-users">—</div>
-                            <div class="stat-label">Total Users</div>
-                        </div>
-                        <div class="stat-card">
-                            <i data-lucide="database" class="stat-icon"></i>
-                            <div class="stat-value" id="admin-stat-items">—</div>
-                            <div class="stat-label">Total Items</div>
-                        </div>
-                        <div class="stat-card">
-                            <i data-lucide="key-round" class="stat-icon"></i>
-                            <div class="stat-value" id="admin-stat-passwords">—</div>
-                            <div class="stat-label">Passwords</div>
-                        </div>
-                        <div class="stat-card">
-                            <i data-lucide="link" class="stat-icon"></i>
-                            <div class="stat-value" id="admin-stat-links">—</div>
-                            <div class="stat-label">Links</div>
-                        </div>
-                    </div>
-
-                    <!-- Users Table -->
-                    <div class="vault-card" style="margin-top:2rem;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-                            <h3 style="display:flex;align-items:center;gap:0.5rem;">
-                                <i data-lucide="users" size="18"></i> All Users
-                            </h3>
-                            <button id="refresh-users-btn" class="btn" style="width:auto;padding:0.5rem 1rem;background:rgba(139,92,246,0.1);color:var(--accent-primary);font-size:0.8rem;">
-                                <i data-lucide="refresh-cw" size="14"></i> Refresh
-                            </button>
-                        </div>
-                        <div id="admin-users-table-wrap" class="table-wrap">
-                            <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Username</th>
-                                        <th>Role</th>
-                                        <th>Passwords</th>
-                                        <th>Links</th>
-                                        <th>Total Items</th>
-                                        <th>Joined</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="admin-users-tbody">
-                                    <tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:2rem;">Loading...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-
-        <!-- Add Item Modal -->
-        <div id="modal-overlay" class="modal-overlay">
-            <div class="modal-content">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
-                    <h2>Add New Item</h2>
-                    <button id="close-modal" style="background:none;border:none;color:var(--text-dim);cursor:pointer;">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>
-                <form id="add-item-form">
-                    <div class="input-group">
-                        <label>Item Type</label>
-                        <select id="item-type" style="width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--panel-border);border-radius:12px;padding:0.8rem 1rem;color:white;font-size:1rem;cursor:pointer;">
-                            <option value="password">Password Manager</option>
-                            <option value="link">Link Manager</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Name / Title</label>
-                        <input type="text" id="site-name" placeholder="e.g. Google, Personal Blog" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Website URL (Optional)</label>
-                        <input type="url" id="site-url" placeholder="https://example.com">
-                    </div>
-                    <div id="password-fields">
-                        <div class="input-group">
-                            <label>Username / Email</label>
-                            <input type="text" id="username" placeholder="your@email.com">
-                        </div>
-                        <div class="input-group" style="position:relative;">
-                            <label>Password</label>
-                            <input type="password" id="password">
-                            <button type="button" id="gen-password" style="position:absolute;right:0.5rem;bottom:0.5rem;background:var(--panel-border);border:none;color:white;padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;cursor:pointer;">
-                                Generate
-                            </button>
-                        </div>
-                    </div>
-                    <div id="link-fields" class="hidden">
-                        <div class="input-group">
-                            <label>Description / Notes</label>
-                            <input type="text" id="description" placeholder="Quick notes about this link">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        Save to Vault <i data-lucide="plus"></i>
-                    </button>
-                </form>
             </div>
-        </div>
-
-        <!-- Reset Password Modal -->
-        <div id="reset-modal" class="modal-overlay">
-            <div class="modal-content" style="max-width:400px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-                    <h2 style="font-size:1.3rem;">Reset User Password</h2>
-                    <button id="close-reset-modal" style="background:none;border:none;color:var(--text-dim);cursor:pointer;">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>
-                <p id="reset-modal-username" style="color:var(--text-dim);margin-bottom:1.5rem;font-size:0.9rem;"></p>
-                <div class="input-group">
-                    <label>New Password</label>
-                    <input type="password" id="reset-new-password" placeholder="Enter new password">
-                </div>
-                <button id="confirm-reset-btn" class="btn btn-primary">Reset Password</button>
-            </div>
-        </div>
-
-        <!-- FAB -->
-        <button id="add-btn" class="fab hidden">
-            <i data-lucide="plus"></i>
-        </button>
+            <button type="submit" id="auth-submit-btn" class="btn btn-primary">
+                Unlock Vault <i data-lucide="unlock"></i>
+            </button>
+            <p class="auth-switch-text">
+                <span id="auth-switch-text">New here?</span>
+                <a href="#" id="auth-switch-link">Create Account</a>
+            </p>
+        </form>
     </div>
 
-    <script src="script.js"></script>
-    <script>lucide.createIcons();</script>
+    <!-- ═══════════════════════════════════════ VAULT SCREEN ═══ -->
+    <div id="vault-screen" class="vault-layout">
+
+        <!-- Mobile: Top Header Bar -->
+        <header class="mobile-header">
+            <button id="mob-menu-btn" class="mob-icon-btn">
+                <i data-lucide="menu"></i>
+            </button>
+            <div class="mobile-logo">
+                <i data-lucide="shield-check"></i>
+                <span>Aura Vault</span>
+            </div>
+            <button id="mob-add-btn" class="mob-icon-btn accent-btn">
+                <i data-lucide="plus"></i>
+            </button>
+        </header>
+
+        <!-- Mobile: Drawer Backdrop -->
+        <div id="drawer-backdrop" class="drawer-backdrop"></div>
+
+        <!-- ────────── SIDEBAR ────────── -->
+        <aside class="sidebar" id="sidebar">
+
+            <!-- Logo -->
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <div class="sidebar-logo-text">
+                    <span class="sidebar-brand">Aura Vault</span>
+                    <span class="sidebar-tagline">Secure Manager</span>
+                </div>
+                <button id="sidebar-close-btn" class="sidebar-close-btn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- User Card -->
+            <div class="sidebar-user-card">
+                <div id="user-avatar" class="sidebar-avatar">?</div>
+                <div class="sidebar-user-info">
+                    <p id="vault-username-display" class="sidebar-username">Vault Owner</p>
+                    <p id="user-role-label" class="sidebar-role">Secure Session</p>
+                </div>
+                <button id="logout-btn" class="sidebar-logout-btn" title="Logout">
+                    <i data-lucide="log-out"></i>
+                </button>
+            </div>
+
+            <!-- Mini Stats -->
+            <div class="sidebar-stats">
+                <div class="sidebar-stat">
+                    <span id="sb-stat-passwords" class="sidebar-stat-value">0</span>
+                    <span class="sidebar-stat-label">Passwords</span>
+                </div>
+                <div class="sidebar-stat-divider"></div>
+                <div class="sidebar-stat">
+                    <span id="sb-stat-links" class="sidebar-stat-value">0</span>
+                    <span class="sidebar-stat-label">Links</span>
+                </div>
+                <div class="sidebar-stat-divider"></div>
+                <div class="sidebar-stat">
+                    <span id="sb-stat-favs" class="sidebar-stat-value">0</span>
+                    <span class="sidebar-stat-label">Favorites</span>
+                </div>
+            </div>
+
+            <!-- Nav -->
+            <nav class="sidebar-nav">
+                <p class="nav-section-label">MAIN</p>
+                <ul>
+                    <li>
+                        <button id="nav-all" class="nav-item active" data-cat="all">
+                            <span class="nav-item-icon"><i data-lucide="layout-grid"></i></span>
+                            <span class="nav-item-label">All Items</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-passwords" class="nav-item" data-cat="password">
+                            <span class="nav-item-icon"><i data-lucide="key-round"></i></span>
+                            <span class="nav-item-label">Passwords</span>
+                            <span id="nav-badge-passwords" class="nav-badge">0</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-links" class="nav-item" data-cat="link">
+                            <span class="nav-item-icon"><i data-lucide="link"></i></span>
+                            <span class="nav-item-label">Links</span>
+                            <span id="nav-badge-links" class="nav-badge">0</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-favorites" class="nav-item" data-cat="favorite">
+                            <span class="nav-item-icon"><i data-lucide="star"></i></span>
+                            <span class="nav-item-label">Favorites</span>
+                        </button>
+                    </li>
+                </ul>
+
+                <p class="nav-section-label">MANAGE</p>
+                <ul>
+                    <li>
+                        <button id="nav-settings" class="nav-item" data-cat="settings">
+                            <span class="nav-item-icon"><i data-lucide="settings"></i></span>
+                            <span class="nav-item-label">Settings</span>
+                        </button>
+                    </li>
+                    <li id="nav-admin-li" style="display:none;">
+                        <button id="nav-admin" class="nav-item nav-admin-item" data-cat="admin">
+                            <span class="nav-item-icon"><i data-lucide="shield"></i></span>
+                            <span class="nav-item-label">Admin Panel</span>
+                            <span class="nav-admin-dot"></span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="sidebar-security-badge">
+                    <i data-lucide="lock" size="12"></i>
+                    <span>End-to-end encrypted</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ────────── MAIN CONTENT ────────── -->
+        <main class="main-content">
+
+            <!-- Vault Grid View -->
+            <div id="vault-grid-container">
+                <div class="content-header">
+                    <div class="content-header-left">
+                        <h1 id="view-title">All Items</h1>
+                        <p id="item-count" class="content-subtitle">0 items found</p>
+                    </div>
+                    <div class="search-container">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="search-bar" class="search-input" placeholder="Search your vault...">
+                        <kbd class="search-kbd">⌘K</kbd>
+                    </div>
+                </div>
+                <div id="vault-grid" class="vault-grid"></div>
+            </div>
+
+            <!-- Settings Panel -->
+            <div id="settings-panel" class="hidden">
+                <div class="content-header">
+                    <div class="content-header-left">
+                        <h1>Settings</h1>
+                        <p class="content-subtitle">Manage your vault and account</p>
+                    </div>
+                </div>
+                <div class="vault-grid">
+                    <div class="vault-card">
+                        <h3 class="card-section-title"><i data-lucide="user-cog" size="16"></i> Security</h3>
+                        <form id="change-pass-form">
+                            <div class="input-group">
+                                <label>New Master Password</label>
+                                <input type="password" id="new-master-pass" placeholder="Enter new password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="padding:0.7rem;">Update Password</button>
+                        </form>
+                    </div>
+                    <div class="vault-card">
+                        <h3 class="card-section-title"><i data-lucide="database" size="16"></i> Data Management</h3>
+                        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                            <button id="export-btn" class="action-btn success"><i data-lucide="download" size="16"></i> Export Vault (.json)</button>
+                            <input type="file" id="import-file" class="hidden" accept=".json">
+                            <button id="import-btn" class="action-btn info"><i data-lucide="upload" size="16"></i> Import Vault</button>
+                            <button id="wipe-btn" class="action-btn danger"><i data-lucide="trash-2" size="16"></i> Wipe Entire Vault</button>
+                        </div>
+                    </div>
+                    <div class="vault-card">
+                        <h3 class="card-section-title"><i data-lucide="bar-chart-3" size="16"></i> Vault Statistics</h3>
+                        <div class="settings-stats">
+                            <div class="settings-stat-row">
+                                <span class="settings-stat-label">Total Passwords</span>
+                                <span id="stat-passwords" class="settings-stat-value">0</span>
+                            </div>
+                            <div class="settings-stat-row">
+                                <span class="settings-stat-label">Total Links</span>
+                                <span id="stat-links" class="settings-stat-value">0</span>
+                            </div>
+                            <div class="settings-stat-row">
+                                <span class="settings-stat-label">Security Level</span>
+                                <span style="color:var(--success);font-weight:600;font-size:0.85rem;">Excellent</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="admin-panel" class="hidden">
+                <div class="content-header">
+                    <div class="content-header-left">
+                        <div style="display:flex;align-items:center;gap:0.75rem;">
+                            <h1>Admin Panel</h1>
+                            <span class="admin-badge">ADMIN</span>
+                        </div>
+                        <p class="content-subtitle">Manage users and monitor global statistics</p>
+                    </div>
+                    <button id="refresh-users-btn" class="btn" style="width:auto;padding:0.6rem 1.2rem;background:rgba(139,92,246,0.1);color:var(--accent-primary);font-size:0.85rem;">
+                        <i data-lucide="refresh-cw" size="14"></i> Refresh
+                    </button>
+                </div>
+
+                <div class="admin-stats-grid">
+                    <div class="stat-card"><i data-lucide="users" class="stat-icon"></i><div class="stat-value" id="admin-stat-users">—</div><div class="stat-label">Total Users</div></div>
+                    <div class="stat-card"><i data-lucide="database" class="stat-icon"></i><div class="stat-value" id="admin-stat-items">—</div><div class="stat-label">Total Items</div></div>
+                    <div class="stat-card"><i data-lucide="key-round" class="stat-icon"></i><div class="stat-value" id="admin-stat-passwords">—</div><div class="stat-label">Passwords</div></div>
+                    <div class="stat-card"><i data-lucide="link" class="stat-icon"></i><div class="stat-value" id="admin-stat-links">—</div><div class="stat-label">Links</div></div>
+                </div>
+
+                <div class="vault-card" style="margin-top:1.5rem;">
+                    <h3 class="card-section-title"><i data-lucide="users" size="16"></i> All Users</h3>
+                    <div class="table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>Username</th><th>Role</th>
+                                    <th>Passwords</th><th>Links</th><th>Total</th>
+                                    <th>Joined</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-tbody">
+                                <tr><td colspan="8" class="table-empty">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile: Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="bottom-nav-item active" data-cat="all" id="mob-nav-all">
+                <i data-lucide="layout-grid"></i><span>All</span>
+            </button>
+            <button class="bottom-nav-item" data-cat="password" id="mob-nav-passwords">
+                <i data-lucide="key-round"></i><span>Passwords</span>
+            </button>
+            <button class="bottom-nav-item" data-cat="link" id="mob-nav-links">
+                <i data-lucide="link"></i><span>Links</span>
+            </button>
+            <button class="bottom-nav-item" data-cat="favorite" id="mob-nav-favorites">
+                <i data-lucide="star"></i><span>Favorites</span>
+            </button>
+            <button class="bottom-nav-item" data-cat="settings" id="mob-nav-settings">
+                <i data-lucide="settings"></i><span>Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ═══════════════════════════════════════ MODALS ═══ -->
+
+    <!-- Add Item Modal -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Item</h2>
+                <button id="close-modal" class="modal-close-btn"><i data-lucide="x"></i></button>
+            </div>
+            <form id="add-item-form">
+                <div class="input-group">
+                    <label>Item Type</label>
+                    <select id="item-type">
+                        <option value="password">🔑 Password</option>
+                        <option value="link">🔗 Link</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Name / Title</label>
+                    <input type="text" id="site-name" placeholder="e.g. Google, Personal Blog" required>
+                </div>
+                <div class="input-group">
+                    <label>Website URL (Optional)</label>
+                    <input type="url" id="site-url" placeholder="https://example.com">
+                </div>
+                <div id="password-fields">
+                    <div class="input-group">
+                        <label>Username / Email</label>
+                        <input type="text" id="username" placeholder="your@email.com">
+                    </div>
+                    <div class="input-group" style="position:relative;">
+                        <label>Password</label>
+                        <input type="password" id="password">
+                        <button type="button" id="gen-password" class="gen-btn">Generate</button>
+                    </div>
+                </div>
+                <div id="link-fields" class="hidden">
+                    <div class="input-group">
+                        <label>Description / Notes</label>
+                        <input type="text" id="description" placeholder="Quick notes about this link">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Save to Vault <i data-lucide="plus"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="reset-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width:400px;">
+            <div class="modal-header">
+                <h2 style="font-size:1.2rem;">Reset User Password</h2>
+                <button id="close-reset-modal" class="modal-close-btn"><i data-lucide="x"></i></button>
+            </div>
+            <p id="reset-modal-username" style="color:var(--text-dim);margin-bottom:1.5rem;font-size:0.9rem;"></p>
+            <div class="input-group">
+                <label>New Password</label>
+                <input type="password" id="reset-new-password" placeholder="Enter new password">
+            </div>
+            <button id="confirm-reset-btn" class="btn btn-primary">Reset Password</button>
+        </div>
+    </div>
+
+    <!-- Desktop FAB -->
+    <button id="add-btn" class="fab hidden">
+        <i data-lucide="plus"></i>
+    </button>
+
+</div>
+<script src="script.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

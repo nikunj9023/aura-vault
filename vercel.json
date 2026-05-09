@@ -1,12 +1,22 @@
 {
+  "name": "aura-vault-premium",
   "version": 2,
   "builds": [
-    { "src": "server.js", "use": "@vercel/node" },
-    { "src": "*.html", "use": "@vercel/static" },
-    { "src": "*.css", "use": "@vercel/static" },
-    { "src": "script.js", "use": "@vercel/static" }
+    {
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["index.html", "style.css", "script.js"]
+      }
+    }
   ],
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/server.js" }
-  ]
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://neondb_owner:npg_WGj69mIEwzNr@ep-green-base-an3n0aaq-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+  }
 }
