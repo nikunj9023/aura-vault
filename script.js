@@ -100,11 +100,6 @@ class VaultManager {
             if (btn) btn.addEventListener('click', () => this.setCategory(btn.dataset.cat));
         });
 
-        // Mobile nav (bottom bar)
-        ['all','passwords','links','favorites','settings'].forEach(id => {
-            const btn = document.getElementById('mob-nav-' + id);
-            if (btn) btn.addEventListener('click', () => this.setCategory(btn.dataset.cat));
-        });
 
         // Mobile drawer
         this.mobMenuBtn.addEventListener('click', () => this.openDrawer());
@@ -228,10 +223,6 @@ class VaultManager {
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         const desktopBtn = document.querySelector(`.nav-item[data-cat="${cat}"]`);
         if (desktopBtn) desktopBtn.classList.add('active');
-        // Bottom nav active
-        document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
-        const mobBtn = document.querySelector(`.bottom-nav-item[data-cat="${cat}"]`);
-        if (mobBtn) mobBtn.classList.add('active');
 
         this.gridContainer.classList.add('hidden');
         this.settingsPanel.classList.add('hidden');
@@ -513,7 +504,7 @@ class VaultManager {
     // ── Toast ─────────────────────────────────────
     showToast(msg, type = 'success') {
         const t = document.createElement('div');
-        t.style.cssText = `position:fixed;bottom:calc(var(--bottom-nav-h,0px) + 1.5rem);left:50%;
+        t.style.cssText = `position:fixed;bottom:2rem;left:50%;
             transform:translateX(-50%);background:${type==='error'?'var(--danger)':'var(--success)'};
             color:white;padding:.55rem 1.6rem;border-radius:20px;font-size:.85rem;
             z-index:10000;font-weight:500;animation:slideUp .3s ease;white-space:nowrap;
