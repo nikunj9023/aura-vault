@@ -321,8 +321,8 @@ class VaultManager {
                 <div class="vault-card" data-id="${item.id}">
                     <div class="card-header">
                         <div class="site-icon" style="background:rgba(59,130,246,0.1);color:var(--accent-secondary);"><i data-lucide="link" size="20"></i></div>
-                        <div><div class="card-title">${this.esc(item.siteName)}</div><div class="card-subtitle">Quick Link</div></div>
-                        <div style="margin-left:auto;display:flex;gap:.4rem;">
+                        <div style="flex:1;min-width:0;"><div class="card-title">${this.esc(item.siteName)}</div><div class="card-subtitle">Quick Link</div></div>
+                        <div style="margin-left:auto;display:flex;gap:.4rem;flex-shrink:0;">
                             <button class="icon-btn" onclick="vault.toggleFavorite(${item.id})" style="color:${fc};" aria-label="Toggle Favorite"><i data-lucide="star" fill="${ff}" size="17"></i></button>
                             <button class="icon-btn danger" onclick="vault.deleteItem(${item.id})" aria-label="Delete Item"><i data-lucide="trash-2" size="17"></i></button>
                         </div>
@@ -335,8 +335,8 @@ class VaultManager {
                 <div class="vault-card" data-id="${item.id}">
                     <div class="card-header">
                         <div class="site-icon">${item.siteName[0].toUpperCase()}</div>
-                        <div><div class="card-title">${this.esc(item.siteName)}</div><div class="card-subtitle">${this.getDomain(item.url)}</div></div>
-                        <div style="margin-left:auto;display:flex;gap:.4rem;">
+                        <div style="flex:1;min-width:0;"><div class="card-title">${this.esc(item.siteName)}</div><div class="card-subtitle">${this.getDomain(item.url)}</div></div>
+                        <div style="margin-left:auto;display:flex;gap:.4rem;flex-shrink:0;">
                             <button class="icon-btn" onclick="vault.toggleFavorite(${item.id})" style="color:${fc};" aria-label="Toggle Favorite"><i data-lucide="star" fill="${ff}" size="17"></i></button>
                             <button class="icon-btn danger" onclick="vault.deleteItem(${item.id})" aria-label="Delete Item"><i data-lucide="trash-2" size="17"></i></button>
                         </div>

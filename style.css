@@ -214,8 +214,8 @@ select{cursor:pointer;}
 .site-icon{width:42px;height:42px;background:rgba(139,92,246,.1);border-radius:11px;
     display:flex;justify-content:center;align-items:center;font-weight:700;
     color:var(--accent-primary);font-size:1.1rem;flex-shrink:0;}
-.card-title{font-weight:600;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
-.card-subtitle{font-size:.78rem;color:var(--text-dim);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
+.card-title{font-weight:600;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-subtitle{font-size:.78rem;color:var(--text-dim);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .field-group{margin-bottom:1rem;}
 .field-label{font-size:.67rem;color:var(--text-dim);margin-bottom:.35rem;
     text-transform:uppercase;letter-spacing:.05em;}
