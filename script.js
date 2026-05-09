@@ -350,6 +350,7 @@ class VaultManager {
                             <button class="copy-btn" onclick="vault.togglePass(this,'${this.ea(item.password||'')}')" aria-label="Show/Hide Password"><i data-lucide="eye" size="14"></i></button>
                             <button class="copy-btn" onclick="vault.copy('${this.ea(item.password||'')}')" aria-label="Copy Password"><i data-lucide="copy" size="14"></i></button>
                         </div></div></div>
+                    ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="btn btn-primary" style="padding:.6rem;font-size:.8rem;text-decoration:none;margin-top:.5rem;">Open Link <i data-lucide="external-link" size="13"></i></a>` : ''}
                 </div>`;
         }).join('');
         lucide.createIcons();
