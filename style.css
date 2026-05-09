@@ -95,7 +95,7 @@ label {
     margin-left: 0.5rem;
 }
 
-input {
+input, select {
     width: 100%;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--panel-border);
@@ -106,7 +106,7 @@ input {
     transition: var(--transition-fast);
 }
 
-input:focus {
+input:focus, select:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
@@ -136,6 +136,17 @@ input:focus {
     box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
 }
 
+.nav-btn {
+    background: transparent;
+    color: var(--text-dim);
+    transition: var(--transition-fast);
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+}
+
 .nav-btn.active {
     background: rgba(139, 92, 246, 0.1) !important;
     color: var(--accent-primary) !important;
@@ -157,12 +168,13 @@ input:focus {
 }
 
 .sidebar {
-    width: 300px;
+    width: 280px;
     border-right: 1px solid var(--panel-border);
     padding: 2rem;
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .main-content {
@@ -170,6 +182,22 @@ input:focus {
     padding: 2rem;
     overflow-y: auto;
     position: relative;
+    background: rgba(0,0,0,0.1);
+}
+
+/* User Avatar */
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 /* Search Bar */
@@ -179,30 +207,33 @@ input:focus {
 }
 
 .search-input {
-    padding-left: 2.5rem;
+    padding-left: 2.75rem;
+    background: rgba(255,255,255,0.05);
 }
 
 /* Grid */
 .vault-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
 .vault-card {
     background: var(--panel-bg);
     border: 1px solid var(--panel-border);
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 1.5rem;
-    transition: var(--transition-fast);
+    transition: var(--transition-mid);
     position: relative;
     overflow: hidden;
+    backdrop-filter: blur(5px);
 }
 
 .vault-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(139, 92, 246, 0.3);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
 }
 
 .card-header {
@@ -213,20 +244,22 @@ input:focus {
 }
 
 .site-icon {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     background: rgba(139, 92, 246, 0.1);
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
     color: var(--accent-primary);
+    font-size: 1.2rem;
 }
 
 .card-title {
     font-weight: 600;
     font-size: 1.1rem;
+    color: var(--text-main);
 }
 
 .card-subtitle {
@@ -235,23 +268,49 @@ input:focus {
 }
 
 .field-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .field-label {
     font-size: 0.7rem;
     color: var(--text-dim);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .field-value {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 0.8rem;
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
     font-size: 0.9rem;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-main);
+}
+
+.icon-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
 }
 
 .copy-btn {
@@ -267,14 +326,125 @@ input:focus {
     color: var(--accent-primary);
 }
 
+/* Admin Panel Styles */
+.admin-badge {
+    background: linear-gradient(135deg, var(--accent-primary), #ec4899);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-icon {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 1rem;
+    color: var(--accent-primary);
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: var(--text-main);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 1rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--panel-border);
+    font-size: 0.9rem;
+}
+
+.role-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.admin-badge-sm {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--accent-primary);
+}
+
+.user-badge-sm {
+    background: rgba(148, 163, 184, 0.1);
+    color: var(--text-dim);
+}
+
+.tbl-btn {
+    background: rgba(255,255,255,0.05);
+    border: none;
+    color: var(--text-dim);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.tbl-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-main);
+}
+
+.tbl-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+}
+
 /* Floating Action Button */
 .fab {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
+    bottom: 2.5rem;
+    right: 2.5rem;
     width: 60px;
     height: 60px;
-    border-radius: 30px;
+    border-radius: 50%;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: white;
     display: flex;
@@ -283,11 +453,13 @@ input:focus {
     font-size: 1.5rem;
     box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
     cursor: pointer;
-    transition: var(--transition-fast);
+    transition: var(--transition-mid);
+    z-index: 100;
 }
 
 .fab:hover {
     transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6);
 }
 
 /* Modal */
@@ -297,12 +469,13 @@ input:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 1.5rem;
 }
 
 .modal-overlay.active {
@@ -310,13 +483,14 @@ input:focus {
 }
 
 .modal-content {
-    background: #121214;
+    background: #0f0f12;
     border: 1px solid var(--panel-border);
-    border-radius: 24px;
+    border-radius: 28px;
     width: 100%;
     max-width: 500px;
-    padding: 2rem;
+    padding: 2.5rem;
     animation: slideUp 0.4s var(--transition-mid);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
 }
 
 @keyframes fadeIn {
@@ -325,7 +499,7 @@ input:focus {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -345,4 +519,16 @@ input:focus {
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    .main-content {
+        padding: 1.5rem;
+    }
+    .vault-grid {
+        grid-template-columns: 1fr;
+    }
 }
