@@ -35,7 +35,8 @@
                 <label for="master-password">Master Password</label>
                 <div class="input-wrap">
                     <i data-lucide="lock" class="input-icon"></i>
-                    <input type="password" id="master-password" placeholder="••••••••" required autocomplete="current-password">
+                    <input type="password" id="master-password" placeholder="••••••••" required autocomplete="current-password" style="padding-right: 2.5rem;">
+                    <button type="button" class="view-pass-btn" onclick="vault.toggleInputPass(this, 'master-password')"><i data-lucide="eye" size="16"></i></button>
                 </div>
             </div>
             <button type="submit" id="auth-submit-btn" class="btn btn-primary">
@@ -45,6 +46,57 @@
                 <span id="auth-switch-text">New here?</span>
                 <a href="#" id="auth-switch-link">Create Account</a>
             </p>
+            <p class="auth-switch-text" style="margin-top:0.5rem;">
+                <a href="#" id="auth-forgot-link" style="color:var(--text-dim);font-weight:500;">Forgot Password?</a>
+            </p>
+
+        </form>
+    </div>
+
+        <!-- ═══════════════════════════════════════ RESET SCREEN ═══ -->
+    <div id="reset-screen" class="auth-container hidden" style="position:absolute;z-index:50;">
+        <div class="auth-logo">
+            <div class="auth-logo-icon"><i data-lucide="key-round"></i></div>
+            <h1>Reset Password</h1>
+            <p class="subtitle" id="reset-subtitle">Enter a new password for your account</p>
+        </div>
+        <form id="reset-form">
+            <input type="hidden" id="reset-username">
+            <input type="hidden" id="reset-token">
+            <div class="input-group">
+                <label for="reset-new-password-input">New Password</label>
+                <div class="input-wrap">
+                    <i data-lucide="lock" class="input-icon"></i>
+                    <input type="password" id="reset-new-password-input" placeholder="••••••••" required>
+                    <button type="button" class="view-pass-btn" onclick="vault.toggleInputPass(this, 'reset-new-password-input')"><i data-lucide="eye" size="16"></i></button>
+                </div>
+            </div>
+            <button type="submit" id="reset-submit-btn" class="btn btn-primary">
+                Confirm Reset <i data-lucide="check"></i>
+            </button>
+            <p class="auth-switch-text"><a href="/" style="color:var(--text-dim);">Back to Login</a></p>
+        </form>
+    </div>
+
+    <!-- ═══════════════════════════════════════ FORGOT SCREEN ═══ -->
+    <div id="forgot-screen" class="auth-container hidden" style="position:absolute;z-index:40;">
+        <div class="auth-logo">
+            <div class="auth-logo-icon"><i data-lucide="mail"></i></div>
+            <h1>Forgot Password</h1>
+            <p class="subtitle">Enter your username to receive a reset link</p>
+        </div>
+        <form id="forgot-form">
+            <div class="input-group">
+                <label for="forgot-username">Username</label>
+                <div class="input-wrap">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="forgot-username" placeholder="e.g. admin" required>
+                </div>
+            </div>
+            <button type="submit" id="forgot-submit-btn" class="btn btn-primary">
+                Send Reset Link <i data-lucide="send"></i>
+            </button>
+            <p class="auth-switch-text"><a href="#" id="forgot-back-link" style="color:var(--text-dim);">Back to Login</a></p>
         </form>
     </div>
 
@@ -209,7 +261,10 @@
                         <form id="change-pass-form">
                             <div class="input-group">
                                 <label>New Master Password</label>
-                                <input type="password" id="new-master-pass" placeholder="Enter new password" required>
+                                <div style="position:relative;">
+                                    <input type="password" id="new-master-pass" placeholder="Enter new password" required style="padding-right: 2.5rem;">
+                                    <button type="button" class="view-pass-btn" onclick="vault.toggleInputPass(this, 'new-master-pass')"><i data-lucide="eye" size="16"></i></button>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary" style="padding:0.7rem;">Update Password</button>
                         </form>
@@ -320,8 +375,11 @@
                     </div>
                     <div class="input-group" style="position:relative;">
                         <label>Password</label>
-                        <input type="password" id="password">
-                        <button type="button" id="gen-password" class="gen-btn">Generate</button>
+                        <input type="password" id="password" style="padding-right: 6.5rem;">
+                        <div style="position:absolute;right:.5rem;bottom:.45rem;display:flex;align-items:center;gap:.35rem;">
+                            <button type="button" class="view-pass-btn" style="position:static;transform:none;padding:0.25rem;" onclick="vault.toggleInputPass(this, 'password')"><i data-lucide="eye" size="16"></i></button>
+                            <button type="button" id="gen-password" class="gen-btn" style="position:static;transform:none;">Generate</button>
+                        </div>
                     </div>
                 </div>
                 <div id="link-fields" class="hidden">
@@ -347,7 +405,10 @@
             <p id="reset-modal-username" style="color:var(--text-dim);margin-bottom:1.5rem;font-size:0.9rem;"></p>
             <div class="input-group">
                 <label>New Password</label>
-                <input type="password" id="reset-new-password" placeholder="Enter new password">
+                <div style="position:relative;">
+                    <input type="password" id="reset-new-password" placeholder="Enter new password" style="padding-right: 2.5rem;">
+                    <button type="button" class="view-pass-btn" onclick="vault.toggleInputPass(this, 'reset-new-password')"><i data-lucide="eye" size="16"></i></button>
+                </div>
             </div>
             <button id="confirm-reset-btn" class="btn btn-primary">Reset Password</button>
         </div>

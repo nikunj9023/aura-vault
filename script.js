@@ -24,6 +24,26 @@ class VaultManager {
         this.authSubmitBtn  = document.getElementById('auth-submit-btn');
         this.authSwitchLink = document.getElementById('auth-switch-link');
         this.authSwitchText = document.getElementById('auth-switch-text');
+        this.forgotLink     = document.getElementById('auth-forgot-link');
+        this.forgotScreen   = document.getElementById('forgot-screen');
+        this.forgotForm     = document.getElementById('forgot-form');
+        this.forgotBackLink = document.getElementById('forgot-back-link');
+        this.resetScreen    = document.getElementById('reset-screen');
+        this.resetForm      = document.getElementById('reset-form');
+        this.resetUsername  = document.getElementById('reset-username');
+        this.resetToken     = document.getElementById('reset-token');
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const rToken = urlParams.get('reset_token');
+        const rUser = urlParams.get('username');
+        if (rToken && rUser) {
+            this.loginScreen.classList.add('hidden');
+            this.resetScreen.classList.remove('hidden');
+            this.resetUsername.value = rUser;
+            this.resetToken.value = rToken;
+            document.getElementById('reset-subtitle').textContent = `Resetting password for ${rUser}`;
+        }
+
 
         this.vaultGrid      = document.getElementById('vault-grid');
         this.addItemForm    = document.getElementById('add-item-form');
@@ -83,6 +103,11 @@ class VaultManager {
         // Auth
         this.loginForm.addEventListener('submit', e => this.handleAuth(e));
         this.authSwitchLink.addEventListener('click', e => { e.preventDefault(); this.toggleAuthMode(); });
+        if (this.forgotLink) this.forgotLink.addEventListener('click', e => { e.preventDefault(); this.loginScreen.classList.add('hidden'); this.forgotScreen.classList.remove('hidden'); });
+        if (this.forgotBackLink) this.forgotBackLink.addEventListener('click', e => { e.preventDefault(); this.forgotScreen.classList.add('hidden'); this.loginScreen.classList.remove('hidden'); });
+        if (this.forgotForm) this.forgotForm.addEventListener('submit', e => this.handleForgotPassword(e));
+        if (this.resetForm) this.resetForm.addEventListener('submit', e => this.handleResetPasswordConfirm(e));
+
 
         // Vault form
         this.addItemForm.addEventListener('submit', e => this.handleAddItem(e));
@@ -169,6 +194,30 @@ class VaultManager {
     }
 
     toggleAuthMode() { this.authMode = this.authMode === 'login' ? 'register' : 'login'; this.updateAuthUI(); }
+
+        async handleForgotPassword(e) {
+        e.preventDefault();
+        const btn = document.getElementById('forgot-submit-btn');
+        btn.disabled = true; btn.style.opacity = '0.7';
+        const username = document.getElementById('forgot-username').value.trim();
+        const r = await this.api('/auth/forgot-password', 'POST', { username });
+        if (r) { this.showToast(r.message); this.forgotForm.reset(); setTimeout(()=>{ this.forgotScreen.classList.add('hidden'); this.loginScreen.classList.remove('hidden'); }, 3000); }
+        btn.disabled = false; btn.style.opacity = '1';
+    }
+
+    async handleResetPasswordConfirm(e) {
+        e.preventDefault();
+        const btn = document.getElementById('reset-submit-btn');
+        btn.disabled = true; btn.style.opacity = '0.7';
+        const new_password = document.getElementById('reset-new-password-input').value;
+        const r = await this.api('/auth/reset-password-confirm', 'POST', {
+            username: this.resetUsername.value,
+            token: this.resetToken.value,
+            new_password
+        });
+        if (r) { this.showToast(r.message); setTimeout(() => window.location.href = '/', 2000); }
+        btn.disabled = false; btn.style.opacity = '1';
+    }
 
     async handleAuth(e) {
         e.preventDefault();
@@ -396,6 +445,18 @@ class VaultManager {
         const span = btn.closest('.field-value').querySelector('.masked-pass');
         if (span.textContent === '••••••••') { span.textContent = pass; btn.innerHTML = '<i data-lucide="eye-off" size="14"></i>'; }
         else { span.textContent = '••••••••'; btn.innerHTML = '<i data-lucide="eye" size="14"></i>'; }
+        lucide.createIcons();
+    }
+
+    toggleInputPass(btn, inputId) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '<i data-lucide="eye-off" size="16"></i>';
+        } else {
+            input.type = 'password';
+            btn.innerHTML = '<i data-lucide="eye" size="16"></i>';
+        }
         lucide.createIcons();
     }
 

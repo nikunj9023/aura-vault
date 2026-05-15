@@ -302,6 +302,9 @@ select{cursor:pointer;}
     font-size:.7rem;cursor:pointer;font-weight:600;transition:var(--tr);}
 .gen-btn:hover{background:rgba(139,92,246,.35);}
 
+.view-pass-btn{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-dim);cursor:pointer;padding:.25rem;display:flex;align-items:center;transition:var(--tr);}
+.view-pass-btn:hover{color:var(--accent-primary);}
+
 
 
 /* Animations */
