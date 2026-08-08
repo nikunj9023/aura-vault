@@ -10,7 +10,6 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const hpp = require('hpp');
-const xss = require('xss-clean');
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'd7a8f9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8';
 const IV_LENGTH = 16;
@@ -67,7 +66,6 @@ app.use('/api/auth/', authLimiter);
 
 app.use(cors());
 app.use(express.json({ limit: '10kb' })); // Limit body payload to prevent DoS
-app.use(xss()); // Sanitize data against XSS
 app.use(hpp()); // Prevent HTTP Parameter Pollution
 app.use(express.static(path.join(__dirname, './')));
 
