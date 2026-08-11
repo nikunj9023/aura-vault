@@ -12,8 +12,5 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/server.js" },
     { "src": "/(.*)", "dest": "/server.js" }
-  ],
-  "env": {
-    "DATABASE_URL": "postgresql://neondb_owner:npg_WGj69mIEwzNr@ep-green-base-an3n0aaq-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-  }
+  ]
 }
